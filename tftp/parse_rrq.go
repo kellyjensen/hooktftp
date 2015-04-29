@@ -10,6 +10,7 @@ import (
 type Request struct {
 	Opcode    uint16
 	Blocksize int
+	Tsize     bool
 	Mode      int
 	Path      string
 	Addr      *net.Addr
@@ -73,6 +74,10 @@ func ParseRequest(data []byte) (*Request, error) {
 				return request, err
 			}
 			request.Blocksize = blocksize
+        case "tsize"
+            // throw away tsize value 0
+            _, rest = sliceUpToNullByte(rest)
+			request.Tsize = true
 		default:
 			fmt.Println("Unknown option:", option, string(option))
 			fmt.Println("data:", data)

@@ -130,13 +130,19 @@ func (res *RRQresponse) WriteOACK() error {
 		return nil
 	}
 
-	oackbuffer := make([]byte, 2)
+	oackbuffer := make([]byte, 4)
 	binary.BigEndian.PutUint16(oackbuffer, OACK)
 
 	oackbuffer = append(oackbuffer, []byte("blksize")...)
 	oackbuffer = append(oackbuffer, 0)
 	oackbuffer = append(oackbuffer, []byte(strconv.Itoa(res.Request.Blocksize))...)
 	oackbuffer = append(oackbuffer, 0)
+    if res.Request.Tsize {
+        oackbuffer = append(oackbuffer, []byte("tsize")...)
+        oackbuffer = append(oackbuffer, 0)
+        oackbuffer = append(oackbuffer, []byte(strconv.Itoa(4000000))...)
+        oackbuffer = append(oackbuffer, 0)
+    }
 
 	_, err := res.conn.Write(oackbuffer)
 	if err != nil {

@@ -61,6 +61,8 @@ func handleRRQ(res *tftp.RRQresponse) {
 		return
 	}
 
+    // Determine the file size
+
 	if err := res.WriteOACK(); err != nil {
 		fmt.Println("Failed to write OACK", err)
 		return
